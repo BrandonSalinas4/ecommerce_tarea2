@@ -1,5 +1,6 @@
 import User from "../models/user";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt"
 
 // Controlador para obtener los usuarios por ID
 export const GetOneUserById = async (req, res) => {
@@ -12,7 +13,15 @@ export const GetOneUserById = async (req, res) => {
 
 // Controlador para crear un usuario
 export const CreateUser = async (req, res) => {
-    const userToCreate = req.body;
+    const {username, password} = req.body;
+
+    //Encriptar las contraseñas antes de guardarlas
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const userToCreate = {
+        username,
+        password:hashedPassword //Guardar la contraseña encriptada
+    }
 
     await User.create(userToCreate);
 
@@ -67,6 +76,13 @@ export const Login = async (req, res) => {
     if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
     }
+
+    //Verificar si la contraseña encriptada coincide con la proporsionada
+    const ispasswordValid = await bcrypt.compare(password, username.password);
+
+        if (!ispasswordValid) {
+            return res.status(401).json({message:"Invalid credentials"});
+        }
 
     const token = jwt.sign({ userId: user.id }, "Ecommerce-2024", {
         expiresIn: 60 * 60,

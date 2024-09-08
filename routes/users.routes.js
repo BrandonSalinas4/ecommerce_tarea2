@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { DeleteUserById, GetOneUserById, UpdateUserById, CreateUser, Login } from "../controllers/users.controllers.js";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import checkIdNumber from "../middlewares/users/checkIdNumber.middleware";
 import userExists from "../middlewares/users/userExists.middleware";
 import authorizateUser from "../middlewares/users/authorizateUser.middleware";
@@ -34,9 +34,31 @@ usersRouter.post(
 
 // Ruta para modificar un usuario por ID
 // PATCH { name: "Pepo" } => app.com/user/3
-usersRouter.patch("/:id", [checkIdNumber, userExists], UpdateUserById);
+usersRouter.patch("/:id", 
+    [checkIdNumber, userExists, authorizateUser,
+        param("id", "id invalid").
+        body("username", "Username not valid").exists().isString(),
+        body("password", "Password invalid").exists().isString().isLength({
+            min: 1,
+            max: 10,
+        }),
+        validateDataMiddleware,
+    ], 
+    UpdateUserById
+);
 
 // Ruta para eliminar un usuario por ID
-usersRouter.delete("/:id",[checkIdNumber, userExists, authorizateUser], DeleteUserById);
+usersRouter.delete("/:id",
+    [checkIdNumber, userExists, authorizateUser,
+        param("id", "id invalid").
+        body("username", "Username not valid").exists().isString(),
+        body("password", "Password invalid").exists().isString().isLength({
+            min: 1,
+            max: 10,
+        }),
+        validateDataMiddleware,
+    ], 
+    DeleteUserById
+);
 
 export default usersRouter;

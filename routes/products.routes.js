@@ -2,7 +2,7 @@ import { Router } from "express";
 import {DeleteProductById, GetProductById, UpdateProductById, CreateNewProduct,} from "../controllers/products.controllers.js";
 import productExists from "../middlewares/products/productExist";
 import checkByIdProduct from "../middlewares/products/checkIdProduct.js";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import validateDataMiddleware from "../middlewares/validation/validateData.middleware.js";
 import authorizateUser from "../middlewares/users/authorizateUser.middleware.js";
 
@@ -12,8 +12,7 @@ import authorizateUser from "../middlewares/users/authorizateUser.middleware.js"
   productsRoutes.get("/:id", [checkByIdProduct, productExists, authorizateUser], GetProductById);
   
   // Ruta para crear un producto
-  productsRoutes.post(
-    "/",
+  productsRoutes.post("/",
     [
       body("nameproduct", "nameproduct not valid").exists().isString(),
       body("userproduct", "userproduct not valid").exists().isString(),
@@ -27,9 +26,33 @@ import authorizateUser from "../middlewares/users/authorizateUser.middleware.js"
   );
   
   // Ruta para modificar un producto por ID
-  productsRoutes.patch("/:id", [checkByIdProduct, productExists, authorizateUser], UpdateProductById);
+  productsRoutes.patch("/:id", 
+    [checkByIdProduct, productExists, authorizateUser,
+      param("id", "id invalid").
+      body("nameproduct", "nameproduct not valid").exists().isString(),
+      body("userproduct", "userproduct not valid").exists().isString(),
+      body("codproduct", "codproduct invalid").exists().isString().isLength({
+        min: 1,
+        max: 5,
+      }),
+      validateDataMiddleware, authorizateUser,
+    ], 
+    UpdateProductById
+  );
   
   // Ruta para eliminar un producto por ID
-  productsRoutes.delete("/:id", [checkByIdProduct, productExists, authorizateUser], DeleteProductById);
+  productsRoutes.delete("/:id", 
+    [checkByIdProduct, productExists, authorizateUser,
+      param("id", "id invalid").
+      body("nameproduct", "nameproduct not valid").exists().isString(),
+      body("userproduct", "userproduct not valid").exists().isString(),
+      body("codproduct", "codproduct invalid").exists().isString().isLength({
+        min: 1,
+        max: 5,
+      }),
+      validateDataMiddleware, authorizateUser,
+    ], 
+    DeleteProductById
+  );
   
   export default productsRoutes;
