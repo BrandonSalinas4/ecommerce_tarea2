@@ -28,7 +28,7 @@ import authorizateUser from "../middlewares/users/authorizateUser.middleware.js"
   // Ruta para modificar un producto por ID
   productsRoutes.patch("/:id", 
     [checkByIdProduct, productExists, authorizateUser,
-      param("id", "id invalid").
+      param("id", "id invalid").isString(),
       body("nameproduct", "nameproduct not valid").exists().isString(),
       body("userproduct", "userproduct not valid").exists().isString(),
       body("codproduct", "codproduct invalid").exists().isString().isLength({
@@ -43,7 +43,7 @@ import authorizateUser from "../middlewares/users/authorizateUser.middleware.js"
   // Ruta para eliminar un producto por ID
   productsRoutes.delete("/:id", 
     [checkByIdProduct, productExists, authorizateUser,
-      param("id", "id invalid").
+      param("id", "id invalid").isString(),
       body("nameproduct", "nameproduct not valid").exists().isString(),
       body("userproduct", "userproduct not valid").exists().isString(),
       body("codproduct", "codproduct invalid").exists().isString().isLength({

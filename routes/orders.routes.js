@@ -29,7 +29,7 @@ import authorizateUser from "../middlewares/users/authorizateUser.middleware.js"
   // Ruta para modificar una orden por ID
   ordersRoutes.patch("/:id", 
     [checkByIdOrder, orderExists, authorizateUser,
-      param("id", "id invalid").
+      param("id", "id invalid").isString(),
       body("idorder", "idorder not valid").exists().isString(),
       body("productid", "productid not valid").exists().isString().isLength({
         min: 1,
@@ -43,7 +43,7 @@ import authorizateUser from "../middlewares/users/authorizateUser.middleware.js"
   // Ruta para eliminar una orden por ID
   ordersRoutes.delete("/:id", 
     [checkByIdOrder, orderExists, authorizateUser,
-      param("id", "id invalid").
+      param("id", "id invalid").isString(),
       body("idorder", "idorder not valid").exists().isString(),
       body("productid", "productid not valid").exists().isString().isLength({
         min: 1,

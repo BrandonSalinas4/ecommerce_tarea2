@@ -36,7 +36,7 @@ usersRouter.post(
 // PATCH { name: "Pepo" } => app.com/user/3
 usersRouter.patch("/:id", 
     [checkIdNumber, userExists, authorizateUser,
-        param("id", "id invalid").
+        param("id", "id invalid").isString(),
         body("username", "Username not valid").exists().isString(),
         body("password", "Password invalid").exists().isString().isLength({
             min: 1,
@@ -50,7 +50,7 @@ usersRouter.patch("/:id",
 // Ruta para eliminar un usuario por ID
 usersRouter.delete("/:id",
     [checkIdNumber, userExists, authorizateUser,
-        param("id", "id invalid").
+        param("id", "id invalid").isString(),
         body("username", "Username not valid").exists().isString(),
         body("password", "Password invalid").exists().isString().isLength({
             min: 1,
