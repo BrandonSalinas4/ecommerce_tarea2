@@ -7,7 +7,8 @@ import validateDataMiddleware from "../middlewares/validation/validateData.middl
 import authorizateUser from "../middlewares/users/authorizateUser.middleware.js";
 
   const productsRoutes = Router();
-  
+    productsRoutes.
+
   // Ruta para obtener un producto por ID
   productsRoutes.get("/:id", [checkByIdProduct, productExists, authorizateUser], GetProductById);
   

@@ -1,6 +1,6 @@
 import User from "../models/user";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt"
+import bcryptjs from "bcryptjs"
 
 // Controlador para obtener los usuarios por ID
 export const GetOneUserById = async (req, res) => {
@@ -16,7 +16,7 @@ export const CreateUser = async (req, res) => {
     const {username, password} = req.body;
 
     //Encriptar las contraseñas antes de guardarlas
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
     const userToCreate = {
         username,
@@ -78,7 +78,7 @@ export const Login = async (req, res) => {
     }
 
     //Verificar si la contraseña encriptada coincide con la proporsionada
-    const ispasswordValid = await bcrypt.compare(password, username.password);
+    const ispasswordValid = await bcryptjs.compare(password, username.password);
 
         if (!ispasswordValid) {
             return res.status(401).json({message:"Invalid credentials"});
